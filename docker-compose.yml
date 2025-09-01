@@ -1,0 +1,35 @@
+services:
+  db_pacientes:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: pacientes
+      POSTGRES_PASSWORD: pacientes
+      POSTGRES_DB: pacientes_db
+    volumes:
+      - dados_pacientes:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pacientes -d pacientes_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    networks: [core]
+    # sem "ports:" → DB só acessível pela rede interna do Compose
+
+  pacientes:
+    build: ./backend/services/pacientes-service
+    environment:
+      DATABASE_URL: postgresql+psycopg://pacientes:pacientes@db_pacientes:5432/pacientes_db
+    depends_on:
+      db_pacientes:
+        condition: service_healthy
+    ports:
+      - "8001:8000"
+    networks: [core]
+    volumes:
+      - ./backend/services/pacientes-service/app:/app/app:cached
+
+volumes:
+  dados_pacientes:
+
+networks:
+  core: {}
