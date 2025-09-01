@@ -13,4 +13,5 @@ venv/
 *.log
 dist/
 build/
+.coverage
 htmlcov/
