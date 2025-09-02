@@ -28,8 +28,54 @@ services:
     volumes:
       - ./backend/services/pacientes-service/app:/app/app:cached
 
+  db_consultas:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: consultas
+      POSTGRES_PASSWORD: consultas
+      POSTGRES_DB: consultas_db
+    volumes:
+      - dados_consultas:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U consultas -d consultas_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    networks: [core]
+
+  consultas:
+    build: ./backend/services/consultas-service
+    environment:
+      DATABASE_URL: postgresql+psycopg://consultas:consultas@db_consultas:5432/consultas_db
+    depends_on:
+      db_consultas:
+        condition: service_healthy
+    ports:
+      - "8002:8000"
+    networks: [core]
+    volumes:
+      - ./backend/services/consultas-service/app:/app/app:cached
+
+  frontend:
+    build: ./frontend
+    environment:
+      HOST: 0.0.0.0
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
+      # Optionally set PORT if you want a different port
+      # PORT: 3000
+    command: sh -c "npm ci && npm start"
+    ports:
+      - "3000:3000"
+    networks: [core]
+    volumes:
+      - ./frontend:/app:cached
+      - frontend_node_modules:/app/node_modules
+
 volumes:
   dados_pacientes:
+  dados_consultas:
+  frontend_node_modules:
 
 networks:
   core: {}
