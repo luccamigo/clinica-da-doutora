@@ -1,29 +1,22 @@
+// App entry: define rotas e layout base
 import './styles/global.scss';
-import './App.scss';
-import Sidebar from './components/Sidebar';
-import SearchBar from './components/SearchBar';
-import PatientsList from './components/PatientsList';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import MainLayout from './layouts/MainLayout';
+import PacientesPage from './pages/Pacientes';
+import AgendaPage from './pages/Agenda';
+import EstoquePage from './pages/Estoque';
 
 function App() {
+  // Rotas aninhadas: MainLayout é o shell visual
   return (
-    <div className="layout">
-      <aside className="sidebar">
-        <Sidebar />
-      </aside>
-      <main className="content">
-        <header className="page-header">
-          <h1>Pacientes</h1>
-        </header>
-
-        <section className="search-section">
-          <SearchBar placeholder="Pesquisar Paciente..." />
-        </section>
-
-        <section className="panel-section">
-          <PatientsList />
-        </section>
-      </main>
-    </div>
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route index element={<Navigate to="/pacientes" replace />} />
+        <Route path="/pacientes" element={<PacientesPage />} />
+        <Route path="/agenda" element={<AgendaPage />} />
+        <Route path="/estoque" element={<EstoquePage />} />
+      </Route>
+    </Routes>
   );
 }
 

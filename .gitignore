@@ -2,3 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
+node_modules/
+backend/services/pacientes-service/app/seed.py
+docs/SEEDING.md
+backend/services/consultas-service/app/seed.py
+scripts/seed.sh

@@ -5,9 +5,10 @@
 # medicações e alergias). Foi escrito em FastAPI com dependência de sessão do
 # SQLAlchemy injetada por request.
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import select
 
 from ..db import get_sessao
 from ..models import Paciente, Cirurgia, Medicacao, Alergia
@@ -147,3 +148,27 @@ def excluir_paciente(cpf: str, db: Session = Depends(get_sessao)):
     db.delete(p)
     db.commit()
     return
+@router.get("", response_model=list[PacienteOutLeve])
+def listar_pacientes(
+    q: str | None = Query(default=None, description="Busca por nome (ilike) ou CPF"),
+    limit: int | None = Query(default=None, ge=1, le=10000),
+    db: Session = Depends(get_sessao),
+):
+    # Lista pacientes. Se `q` for informado:
+    # - Numérico com 11+ dígitos → filtro por prefixo de CPF
+    # - Caso contrário → filtro por nome (ilike)
+    stmt = select(Paciente)
+    if q:
+        # Busca por nome (ilike) OU por CPF como string (com pontuação)
+        stmt = stmt.where(
+            (Paciente.nome_completo.ilike(f"%{q}%")) | (Paciente.cpf.ilike(f"%{q}%"))
+        )
+    if limit:
+        stmt = stmt.limit(limit)
+    return db.execute(stmt).scalars().all()
+
+@router.get("/todos", response_model=list[PacienteOutLeve])
+def listar_todos(db: Session = Depends(get_sessao)):
+    # Rota explícita para retornar todos os pacientes (sem paginação)
+    stmt = select(Paciente)
+    return db.execute(stmt).scalars().all()

@@ -1,0 +1,105 @@
+@use '../styles/variables' as *;
+@use 'sass:color';
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding: .5rem 0;
+  background: #fff;
+  border-bottom: 1px solid color.adjust($blue-200, $lightness: -10%);
+}
+
+@media (min-width: $bp-md) {
+  .toolbar { position: sticky; top: 0; z-index: 20; }
+}
+
+.nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.title {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 700;
+  margin: 0;
+}
+
+.todayBtn {}
+.chev {}
+
+.wrap {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  border: 1px solid color.adjust($blue-200, $lightness: -8%);
+  border-radius: $radius-lg;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: $shadow-soft;
+}
+
+.hours {
+  background: #fff;
+  border-right: 1px solid color.adjust($blue-200, $lightness: -8%);
+}
+
+.grid {
+  position: relative;
+  background: #fff;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+}
+
+.tcell {
+  height: 2.25rem; // each 30-min slot height
+  border-bottom: 1px solid color.adjust($blue-200, $lightness: -10%);
+  padding-top: .125rem;
+  padding-bottom: .125rem;
+}
+
+.hlabel {
+  font-size: .8125rem;
+  color: $color-muted;
+  padding: .25rem .5rem 0 .5rem;
+}
+
+.slot {
+  position: relative;
+  padding: .25rem .375rem;
+  cursor: pointer;
+}
+
+.slot:hover { background: $blue-100; }
+
+.events { display: flex; flex-direction: column; gap: .25rem; }
+
+.event {
+  background: color.scale($primary, $lightness: 58%);
+  border-left: .4rem solid $primary;
+  border-radius: .375rem;
+  padding: .25rem .5rem;
+  line-height: 1.1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+
+.eventTitle { font-weight: 600; font-size: .95rem; }
+.eventMeta { font-size: .8rem; color: $color-muted; }
+
+.nowLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #d93025; // Google red-ish
+  box-shadow: 0 0 0 1px rgba(217,48,37,.25);
+}
+
+@media (max-width: $bp-md) {
+  .wrap { border-radius: $radius-md; }
+}

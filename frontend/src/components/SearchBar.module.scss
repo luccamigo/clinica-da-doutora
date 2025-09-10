@@ -1,0 +1,4 @@
+@use '../styles/variables' as *;
+@use 'sass:color';
+
+.input { width: 100%; padding: 1rem 1.25rem; background: #fff; border: 1px solid color.adjust($blue-200, $lightness: -10%); border-radius: $radius-pill; font-size: 1.0625rem; color: $color-text; }

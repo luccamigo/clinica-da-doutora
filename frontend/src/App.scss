@@ -1,52 +1,47 @@
 @use './styles/variables' as *;
-
+@use 'sass:color';
 .layout {
   display: grid;
-  grid-template-columns: $sidebar-width 1fr;
+  // Sidebar responsiva: 14–17rem ou ~20vw
+  grid-template-columns: clamp(14rem, 20vw, 17rem) 1fr;
   min-height: 100vh;
 }
-
 .sidebar {
   position: relative;
-  padding: 22px 18px;
-  border-right: 6px solid lighten($blue-200, 5%);
+  padding: 1.375rem 1.125rem; // 22px 18px
+  border-right: 0.375rem solid color.adjust($blue-200, $lightness: 5%);
+  background: #fff;
+  z-index: 20;
 }
-
 .content {
-  padding: 24px 36px 48px;
+  padding: 1.5rem 2.25rem 3rem; // 24px 36px 48px
 }
-
 .page-header h1 {
-  margin: 8px 0 22px;
-  font-size: 56px;
+  margin: 0.5rem 0 1.375rem; // 8px 22px
+  font-size: clamp(2rem, 4.5vw, 3.5rem); // 32–56px
   line-height: 1.05;
   font-weight: 800;
 }
-
-.search-section { margin: 6px 0 26px; }
-
-.panel-section { margin-top: 10px; }
-
+.search-section { margin: 0.375rem 0 1.625rem; }
+.panel-section { margin-top: 0.625rem; }
 // Search input look
 .search-input {
   width: 100%;
   border: none;
   outline: none;
-  padding: 16px 22px;
+  padding: 1rem 1.375rem; // 16px 22px
   background: $blue-200;
   border-radius: $radius-pill;
-  font-size: 20px;
+  font-size: 1.25rem; // 20px
   color: $color-text;
 }
-
 // Patients panel
 .panel {
   background: $blue-200;
   border-radius: $radius-lg;
-  padding: 12px 18px 20px;
+  padding: 0.75rem 1.125rem 1.25rem; // 12px 18px 20px
   box-shadow: $shadow-soft;
 }
-
 .panel-title {
   display: flex;
   align-items: center;
@@ -54,46 +49,260 @@
   gap: 16px;
   font-weight: 700;
 }
-
 .panel-title::before,
 .panel-title::after {
   content: '';
-  height: 4px;
-  background: $blue-600;
+  height: 0.25rem; // 4px
+  background: $blue-600; // derived from $primary
   flex: 1 1 auto;
-  border-radius: 4px;
+  border-radius: 0.25rem; // 4px
 }
-
 .patients {
   display: flex;
   justify-content: center;
 }
-
 .patients-list {
-  width: min(520px, 90%);
-  margin: 18px auto 8px;
+  width: min(32.5rem, 90%); // 520px
+  margin: 1.125rem auto 0.5rem; // 18px 8px
 }
-
 .patients-item {
   text-align: center;
-  padding: 8px 0;
-  font-size: 18px;
+  padding: 0.5rem 0; // 8px
+  font-size: 1.125rem; // 18px
 }
-
 // Sidebar specific styles live with the component but some shared values here
-.nav {
-  margin-top: 26px;
-}
-
+.nav { margin-top: 1.625rem; }
 .nav-link {
   display: block;
-  padding: 10px 14px;
-  border-radius: 22px;
+  padding: 0.625rem 0.875rem; // 10px 14px
+  border-radius: 1.375rem; // 22px
   color: $color-text;
 }
-
 .nav-link.active,
 .nav-link:hover {
   background: $blue-400;
 }
-
+// Header actions (mobile menu)
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem; // 12px
+}
+.menu-btn {
+  display: none;
+  border: none;
+  background: $blue-200;
+  padding: 0.625rem 0.75rem; // 10px 12px
+  border-radius: 0.625rem; // 10px
+  cursor: pointer;
+}
+.header-left { display: inline-flex; align-items: center; gap: 0.75rem; }
+.header-actions { display: inline-flex; align-items: center; gap: 0.75rem; }
+// Buttons
+.btn {
+  --pad-y: 0.625rem; // 10px
+  --pad-x: 1rem;     // 16px
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: var(--pad-y) var(--pad-x);
+  border: none;
+  border-radius: 0.625rem;
+  font-size: 0.9375rem; // 15px
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-primary {
+  background: $primary;
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+}
+.btn-primary:hover { filter: brightness(0.98); }
+.btn-primary:active { transform: translateY(1px); }
+// Simple form layout used in modals
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1rem;
+}
+.form-grid .span-2 { grid-column: span 2; }
+.form-grid label { display: flex; flex-direction: column; gap: 0.375rem; }
+.form-grid input, .form-grid select, .form-grid textarea {
+  padding: 0.625rem 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: $blue-200;
+}
+.form-error { color: #b00020; margin-top: 0.25rem; grid-column: span 2; }
+// RESPONSIVE
+@include down($bp-lg) {
+  .page-header h1 { font-size: 44px; }
+}
+@include down($bp-md) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0; // left drawer
+    width: min(80vw, 18.75rem); // 300px
+    transform: translateX(-100%);
+    transition: transform .24s ease;
+    box-shadow: 0 20px 40px rgba(0,0,0,.18);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .menu-btn { display: inline-flex; }
+  .header-actions .btn { --pad-y: 0.5rem; --pad-x: 0.75rem; font-size: 0.875rem; }
+  .content {
+    padding: 1.125rem 1.125rem 1.75rem; // 18px 28px
+  }
+  .page-header h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+  .search-input { font-size: 1.125rem; padding: 0.75rem 1rem; }
+  .panel { border-radius: $radius-md; }
+}
+@include down($bp-sm) {
+  .page-header h1 { font-size: 1.875rem; }
+  .patients-list { width: 100%; }
+}
+// Backdrop overlay for mobile drawer
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.25);
+  z-index: 10;
+}
+// Sidebar brand styles (moved from inline to CSS)
+.brand--padded { padding: 0.25rem 0.5rem 0.625rem; }
+.brand-title {
+  font-size: 1.75rem; // 28px
+  font-weight: 800;
+  line-height: 1.05;
+}
+.brand-subtitle {
+  font-size: 2.125rem; // 34px
+  font-weight: 800;
+  color: $primary;
+  line-height: 1.1;
+}
+// Use viewport relative padding for very wide screens
+@media (min-width: $bp-xl) {
+  .content { padding-left: max(2.25rem, 3vw); padding-right: max(2.25rem, 3vw); }
+}
+// ==========================
+// Agenda styles
+// ==========================
+.agenda-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0.5rem 0 1rem;
+}
+.agenda-datepick span { display: block; font-size: .85rem; color: $color-muted; margin-bottom: 0.25rem; }
+.agenda-datepick input[type="date"] {
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: $blue-200;
+}
+.agenda-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+}
+.agenda-slot {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  align-items: start;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: $blue-200;
+  border-radius: $radius-md;
+}
+.agenda-hour { font-weight: 700; opacity: .75; padding-top: 0.25rem; }
+.agenda-items { display: flex; flex-direction: column; gap: 0.5rem; }
+.agenda-item {
+  background: #fff;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  box-shadow: $shadow-soft;
+}
+.agenda-item__line { display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
+.agenda-item__meta { color: $color-muted; font-size: .9rem; margin-top: .125rem; }
+.agenda-item__delete {
+  border: none; background: transparent; color: #b00020; font-size: 1.25rem; cursor: pointer; line-height: 1;
+}
+.agenda-loading, .agenda-error { margin-top: 0.75rem; text-align: center; }
+@include down($bp-md) {
+  .agenda-slot { grid-template-columns: 4.5rem 1fr; }
+}
+// =====================
+// Modal styles
+// =====================
+.modal-root { position: fixed; inset: 0; z-index: 50; }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.35); }
+.modal-dialog {
+  position: absolute; inset: auto 0 0 0; top: 10vh; margin: 0 auto;
+  width: min(92vw, 48rem);
+  max-height: 84vh;
+  display: flex; flex-direction: column; overflow: hidden;
+  background: #fff; border-radius: $radius-lg; box-shadow: $shadow-soft;
+}
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid color.adjust($blue-200, $lightness: -8%); flex: 0 0 auto; }
+.modal-title { margin: 0; font-size: 1.25rem; }
+.modal-close { border: 0; background: transparent; font-size: 1.5rem; line-height: 1; cursor: pointer; }
+.modal-body { padding: 1rem 1.25rem; overflow: auto; flex: 1 1 auto; min-height: 0; }
+.modal-footer { display: flex; justify-content: flex-end; gap: .75rem; padding: 0.75rem 1.25rem 1.25rem; flex: 0 0 auto; }
+// Simple form grid
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem 1rem; }
+.form-grid .span-2 { grid-column: span 2; }
+.form-grid label { display: grid; gap: 0.375rem; font-size: 0.9rem; }
+.form-grid input { padding: 0.625rem 0.75rem; border-radius: 0.5rem; border: 1px solid color.adjust($blue-200, $lightness: -8%); }
+.form-error { grid-column: span 2; color: #b00020; margin-top: 0.25rem; }
+input.is-invalid { border-color: #b00020; }
+.input-error { color: #b00020; font-size: 0.8125rem; }
+// =====================
+// Patient details styling
+// =====================
+.details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 1rem;
+}
+.detail-row {
+  background: $blue-200;
+  border-radius: $radius-md;
+  padding: 0.75rem 1rem;
+  box-shadow: $shadow-soft;
+}
+.detail-row strong {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: color.adjust($primary, $lightness: -12%);
+  margin-bottom: 0.25rem;
+}
+.detail-row span { font-size: 1.05rem; }
+.detail-group {
+  grid-column: 1 / -1;
+  margin-top: 0.25rem;
+  background: $blue-100;
+  border: 1px solid color.adjust($blue-200, $lightness: -8%);
+  border-radius: $radius-lg;
+  padding: 0.75rem 0.875rem 0.875rem;
+}
+.detail-group h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.detail-group h3::after { content: ''; height: 0.2rem; background: $primary; flex: 1; border-radius: 0.25rem; opacity: .6; }
+.detail-group ul { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0; padding: 0; }
+.detail-group li { list-style: none; background: #fff; border: 1px solid color.adjust($blue-200, $lightness: -6%); border-radius: 999px; padding: 0.35rem 0.65rem; }
+@include down($bp-md) { .details { grid-template-columns: 1fr; } }
+// Fieldset arrays (cirurgias, medicacoes, alergias)
+.fieldset { border: 1px solid color.adjust($blue-200, $lightness: -10%); border-radius: 0.75rem; padding: 0.75rem; background: #fff; }
+.fieldset-title { font-weight: 700; margin-bottom: 0.5rem; }
+.rows { display: grid; gap: 0.5rem; }
+.row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 0.5rem; align-items: center; }
+@include down($bp-sm) { .row { grid-template-columns: 1fr; } }

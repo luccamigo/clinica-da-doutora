@@ -1,26 +1,119 @@
 @use './variables' as *;
+@use 'sass:color';
 
-* { box-sizing: border-box; }
+/* Bootstrap (tema customizado com variáveis) */
+@import "bootstrap/scss/functions";
 
-html, body, #root { height: 100%; }
+/* Overrides de tema antes de carregar as variáveis do Bootstrap */
+$primary: $primary;
+$body-bg: $color-bg;
+$body-color: $color-text;
+$link-color: $blue-600;
+
+/* Raios e visuais alinhados ao design existente */
+$border-radius: 0.875rem; /* $radius-md */
+$border-radius-sm: 0.5rem;
+$border-radius-lg: 1.125rem; /* $radius-lg */
+$btn-border-radius: 0.625rem;
+$btn-font-weight: 600;
+$card-border-radius: 1.125rem;
+$input-border-radius: 0.5rem;
+$input-bg: #fff;
+$input-border-color: color.adjust($blue-200, $lightness: -12%);
+$input-focus-box-shadow: none;
+
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/type";
+@import "bootstrap/scss/buttons"; /* .btn, .btn-primary, etc. */
+@import "bootstrap/scss/forms";   /* .form-control, .form-label etc. */
+@import "bootstrap/scss/close";
+@import "bootstrap/scss/alert";   /* .alert, .alert-danger etc. */
+@import "bootstrap/scss/containers"; /* .container / .container-fluid */
+@import "bootstrap/scss/grid";       /* .row / .col- */
+@import "bootstrap/scss/card";       /* cards para painéis */
+@import "bootstrap/scss/list-group"; /* listas estilizadas */
+@import "bootstrap/scss/utilities"; /* utilitários gerais */
+
+/* Base */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
 
 body {
   margin: 0;
   background: $color-bg;
   color: $color-text;
-  font: 16px/1.45 Inter, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  font: 16px/1.45 Inter, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
 }
 
-::placeholder { color: mix($color-muted, $blue-600, 70%); }
-
-// Utility helpers
-.container {
-  width: min(1200px, 100%);
-  margin: 0 auto;
+::placeholder {
+  color: color.mix($color-muted, $primary, $weight: 70%);
 }
 
-a { color: inherit; text-decoration: none; }
-ul { list-style: none; margin: 0; padding: 0; }
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* .container custom removido para usar container do Bootstrap */
+
+/* Removido estilo próprio de .btn para usar Bootstrap */
+
+/* Forms */
+/* Classes de formulários custom descontinuadas em favor do Bootstrap */
+
+.form-error {
+  grid-column: span 2;
+  color: #b00020;
+  margin-top: 0.25rem;
+}
+
+input.is-invalid {
+  border-color: #b00020;
+}
+
+.input-error {
+  color: #b00020;
+  font-size: 0.8125rem;
+}
+
+.fieldset {
+  border: 1px solid color.adjust($blue-200, $lightness: -10%);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  background: #fff;
+}
+
+.fieldset-title {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+/* Grid custom removido para usar .row/.col do Bootstrap */
+
+/* Patient details */
+/* Seções de detalhes migradas para cards/list-groups do Bootstrap */
+
+@media (max-width: 768px) {
+  .details {
+    grid-template-columns: 1fr;
+  }
+}

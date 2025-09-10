@@ -3,20 +3,34 @@ $color-bg: #ffffff;
 $color-text: #111111;
 $color-muted: #6b7280; // gray-500
 
-// Blues inspired by the provided mock
-$blue-50:  #f0f7fc;
-$blue-100: #e2f1fb;
-$blue-200: #cfe8f6; // main soft background
-$blue-300: #b7dbef;
-$blue-400: #90cde8; // sidebar highlight
-$blue-600: #2f9ec6; // accents and lines
+// Primary brand color
+$primary: #2BABE2; // solicitado pelo usuário
 
-// Layout
-$sidebar-width: 240px;
-$radius-lg: 18px;
-$radius-md: 14px;
-$radius-pill: 999px;
+// Blues derived from primary
+@use 'sass:color';
+$blue-50:  color.scale($primary, $lightness: 75%);
+$blue-100: color.scale($primary, $lightness: 68%);
+$blue-200: color.scale($primary, $lightness: 60%); // main soft background
+$blue-300: color.scale($primary, $lightness: 48%);
+$blue-400: color.scale($primary, $lightness: 35%); // sidebar highlight
+$blue-600: $primary; // accents and lines
+
+// Layout (use rem for scalable UI)
+$sidebar-width: 16rem; // ~256px base, usado como fallback
+$radius-lg: 1.125rem; // 18px
+$radius-md: 0.875rem; // 14px
+$radius-pill: 100vmax; // pílula com raio máximo relativo à viewport
 
 // Shadows
 $shadow-soft: 0 1px 2px rgba(0,0,0,0.03), 0 8px 20px rgba(0,0,0,0.06);
 
+// Breakpoints
+$bp-sm: 480px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
+
+// Helpers
+@mixin down($bp) {
+  @media (max-width: $bp) { @content; }
+}

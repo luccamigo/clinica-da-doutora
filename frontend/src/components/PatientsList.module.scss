@@ -1,0 +1,12 @@
+@use '../styles/variables' as *;
+@use 'sass:color';
+
+.panel { background: $blue-200; border-radius: $radius-lg; padding: .75rem 0; box-shadow: $shadow-soft; border: none; }
+.panel .card-body { background: transparent; }
+.title { display:flex; align-items:center; justify-content:center; gap:.75rem; font-weight:700; margin:0; }
+.title::before, .title::after { content:''; height:.2rem; background:$primary; flex:1; border-radius:.25rem; opacity:.6; }
+.wrap { display:flex; justify-content:center; }
+.list { margin: 0; }
+.list .list-group-item { background: transparent; border: none; }
+.item { text-align:center; font-size:1.0625rem; cursor:pointer; background-color: $blue-200;}
+.empty { opacity:.7; text-align:center; }

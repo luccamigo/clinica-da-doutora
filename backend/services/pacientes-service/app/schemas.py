@@ -112,13 +112,13 @@ class PacienteAtualizar(BaseModel):
     # Atualização parcial (PATCH) do paciente.
     # Somente os campos enviados serão considerados, mantendo os demais.
     # update “completo” (MVP), se preferir faça campos todos opcionais
-    nome_completo: Optional[str] = Field(min_length=3, max_length=150)
+    nome_completo: Optional[str] = Field(default=None, min_length=3, max_length=150)
     data_nascimento: Optional[str] = Field(default=None, description="YYYY-MM-DD")
     telefone: Optional[str] = None
     email: Optional[EmailStr] = None
     responsavel_cpf: Optional[str] = Field(default=None, min_length=11, max_length=14)
 
-    cirurgia: Optional[List[AlergiaAtualizar]] = None
+    cirurgia: Optional[List[CirurgiaAtualizar]] = None
     medicacao: Optional[List[MedicacaoAtualizar]] = None
     alergia: Optional[List[AlergiaAtualizar]] = None
 

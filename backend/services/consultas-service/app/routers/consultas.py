@@ -85,3 +85,16 @@ def remover_consulta(id: int, db: Session = Depends(get_sessao)):
     db.delete(c)
     db.commit()
     return
+
+
+@router.get("/consultas", response_model=list[ConsultaOut])
+def listar_consultas(dia: str | None = None, db: Session = Depends(get_sessao)):
+    """Lista consultas.
+
+    - Se `dia` for informado (YYYY-MM-DD), filtra por esse dia.
+    - Caso contrário, retorna todas as consultas (sem paginação – uso controlado).
+    """
+    q = db.query(Consulta)
+    if dia:
+        q = q.filter(Consulta.dia == dia)
+    return q.all()
